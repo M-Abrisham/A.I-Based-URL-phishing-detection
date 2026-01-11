@@ -4,7 +4,9 @@ from sklearn.model_selection import train_test_split
 # create and train machine learning model for binary prediction
 from sklearn.linear_model import LogisticRegression
 #evaluate the accuracy machine learning model
-from sklearn.metrics import accuracy_score, confusion_matrix  
+from sklearn.metrics import accuracy_score, confusion_matrix
+# Improve the Accuracy 
+from sklearn.ensemble import RandomForestClassifier  
 
 def translator(Label):
     if Label == "bad":
@@ -35,9 +37,9 @@ df['target'] = df['Label'].apply(translator)
 suspicious_words = ['secure', 'login', 'update', 'banking']
 def check_suspicious(url):
     if str(url) == suspicious_words:
-      return 1
+       return 1
     else:
-      return 0
+       return 0
 
 df['has_suspicious_words'] = df['URL'].apply(check_suspicious)
 
@@ -46,7 +48,6 @@ print(df[['URL','url_length', 'dot_count', 'has_suspicious_words', 'Label']].hea
 print(df[['Label' , 'target']].head())
 
 # 5. AI Train/Test
-
 # define Questions (x) and "Answers" (y)
 X = df[['url_length', 'dot_count', 'has_suspicious_words']] 
 y = df['target']
@@ -58,11 +59,11 @@ print("Training-data dimensions(Rows, Columns):", X_train.shape)
 print("Test-data dimensions(Rows, Columns):", X_test.shape)
 
 #6. 
-scannerAI = LogisticRegression
+scannerAI = RandomForestClassifier()
 scannerAI.fit(X_train, y_train)
 
 # 7.answer X_test question
 y_pred = scannerAI.predict(X_test)
 
-print("Accuracy:", answers_score(y_test, y_pred))
+print("Correct URL Accuracy:", accuracy_score(y_test, y_pred))
  
