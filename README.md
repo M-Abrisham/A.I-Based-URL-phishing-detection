@@ -92,4 +92,7 @@ risky_tld: 0.0171
 digit_count: 0.2288
 
 Enter Suspicious URL:http://google.com.cust_login.ie
- ALERT >> PHISHING URL! '''
+
+**
+ ALERT >> PHISHING URL! 
+**
