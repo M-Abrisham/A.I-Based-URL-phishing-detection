@@ -75,7 +75,12 @@ else:
     risk_label = "CRITICAL DANGER"
 
 print("\n--- Confusion Matrix ---")
-print(f"Safe Sites Correctly Identified: {model_errorCount[0][0]}")
-print(f"Safe Sites Mistaken for Phishing: {model_errorCount[0][1]}")
-print(f"Phishing Sites Missed ({risk_label}): {missed_count}")
-print(f"Phishing Sites Caught: {model_errorCount[1][1]}")
+print(f"Safe Sites: {model_errorCount[0][0]}")
+print(f"Mistaken: {model_errorCount[0][1]}")
+print(f"Missing Sites ({risk_label}): {missed_count}")
+print(f"Sites Caught: {model_errorCount[1][1]}")
+
+# 8. discover clues AI used to solve the issue
+print("\n--- AI Clue Rankings ---")
+for feature, score in zip(X.columns, scannerAI.feature_importances_):
+    print(f"{feature}: {score:.4f}")
