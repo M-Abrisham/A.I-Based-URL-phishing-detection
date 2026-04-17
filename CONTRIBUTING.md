@@ -1,12 +1,12 @@
 # Contributing
 
-Thanks for your interest in contributing!
+Thanks for your interest in contributing to emlscope!
 
 ## Development setup
 
 ```bash
-git clone https://github.com/M-Abrisham/AI-Based-URL-phishing-detection.git
-cd AI-Based-URL-phishing-detection
+git clone https://github.com/M-Abrisham/emlscope.git
+cd emlscope
 
 python -m venv .venv
 source .venv/bin/activate      # macOS/Linux
@@ -14,6 +14,8 @@ source .venv/bin/activate      # macOS/Linux
 
 pip install -e ".[dev]"
 pre-commit install
+
+cp .env.example .env           # then fill in your API keys
 ```
 
 ## Workflow
@@ -39,8 +41,8 @@ pre-commit install
 ## Commit messages
 
 Short, imperative mood:
-- Good: `Add TF-IDF character n-gram features`
-- Not: `added some features`
+- Good: `Add VirusTotal enricher with response caching`
+- Not: `added vt stuff`
 
 ## Pull requests
 
@@ -48,3 +50,9 @@ Short, imperative mood:
 - Link the issue the PR closes.
 - Keep PRs focused — one concern per PR.
 - CI must pass before merge.
+
+## Responsible use
+
+emlscope is a defensive tool for SOC analysts, students, and researchers.
+Don't commit real phishing payloads, live credentials, or real recipient
+addresses to `tests/fixtures/` or `samples/` — scrub PII first.

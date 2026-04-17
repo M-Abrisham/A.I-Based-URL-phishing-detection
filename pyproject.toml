@@ -3,17 +3,28 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "phishing-detector"
+name = "emlscope"
 version = "0.1.0"
-description = "Machine-learning URL phishing detector"
+description = "Phishing email triage tool: parse .eml, enrich IOCs, produce IR reports"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Mehrnoosh Abrisham" }]
+keywords = ["phishing", "email", "triage", "dfir", "incident-response", "threat-intel"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3",
+]
 dependencies = [
-    "pandas",
-    "scikit-learn",
-    "joblib",
+    "click",
+    "requests",
+    "dnspython",
+    "dkimpy",
+    "python-magic",
+    "jinja2",
+    "python-dotenv",
 ]
 
 [project.optional-dependencies]
@@ -26,10 +37,13 @@ dev = [
 ]
 
 [project.scripts]
-phishing-detector = "phishing_detector.cli:main"
+emlscope = "emlscope.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+emlscope = ["report/templates/*.j2"]
 
 [tool.ruff]
 line-length = 100
