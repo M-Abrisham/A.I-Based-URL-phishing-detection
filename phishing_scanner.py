@@ -11,71 +11,71 @@ def translator(Label):
        return 0
 
 
-# 1. Load Dataset
+# Load Dataset
 print("Loading data... ")
 df = pd.read_csv('phishing_site_urls.csv')
 
-# 2. check first rows
+# check first rows
 print("\n--- First 5 Rows ---")
 print(df.head())
 
-# 3. Create New data from URL
+# Create New data from URL
 print("\n--- Extracting Features ---")
 
-# Feature 1: URL Length 
+# URL Length 
 df['url_length'] = df['URL'].apply(lambda x: len(str(x)))
 
-# Feature 2: Number of dots
+# dots Number
 df['dot_count'] = df['URL'].apply(lambda x: str(x).count('.'))
 df['target'] = df['Label'].apply(translator)
 
-# Feature 3: Suspicious words
+# Suspicious words
 suspicious_words = ['secure', 'login', 'update', 'banking']
 def check_suspicious(url):
     url_lower = str(url).lower()
     return 1 if any(word in url_lower for word in suspicious_words) else 0
 
-df['has_suspicious_words'] = df['URL'].apply(check_suspicious)
+df['suspicious_word'] = df['URL'].apply(check_suspicious)
 
-# Feature 4: Special character counts
+# Special character
 df['dash_count'] = df['URL'].apply(lambda x: str(x).count('-'))
 df['at_count'] = df['URL'].apply(lambda x: str(x).count('@'))
 df['slash_count'] = df['URL'].apply(lambda x: str(x).count('/'))
 
-# Feature 5: Has IP address
+# IP address
 
 def has_ip_address(url):
     ip_pattern = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
     return 1 if re.search(ip_pattern, str(url)) else 0
 df['has_ip'] = df['URL'].apply(has_ip_address)
 
-# Feature 6: HTTPS check
+# HTTPS check
 df['is_https'] = df['URL'].apply(lambda x: 1 if str(x).lower().startswith('https') else 0)
 
-# Feature 7: Subdomain count
+# Subdomain count
 def count_subdomains(url):
     url = str(url).lower().replace('https://', '').replace('http://', '')
     domain_part = url.split('/')[0]
     return domain_part.count('.')
 df['subdomain_count'] = df['URL'].apply(count_subdomains)
 
-# Feature 8: Suspicious TLD
+# Suspicious TLD
 risky_tlds = ['.xyz', '.top', '.pw', '.tk', '.ml', '.ga', '.cf', '.gq', '.buzz', '.club']
 def has_risky_tld(url):
     url_lower = str(url).lower()
     return 1 if any(url_lower.endswith(tld) or tld + '/' in url_lower for tld in risky_tlds) else 0
 df['risky_tld'] = df['URL'].apply(has_risky_tld)
 
-# Feature 9: Digit count in URL
+# URL Digit count
 df['digit_count'] = df['URL'].apply(lambda x: sum(c.isdigit() for c in str(x)))
 
-# 4. Result
-print(df[['URL','url_length', 'dot_count', 'has_suspicious_words', 'Label']].head())
+# Result
+print(df[['URL','url_length', 'dot_count', 'suspicious_word', 'Label']].head())
 print(df[['Label' , 'target']].head())
 
-# 5. AI Train/Test
+# AI Train/Test
 # define Questions (x) and "Answers" (y)
-X = df[['url_length', 'dot_count', 'has_suspicious_words', 'dash_count', 'at_count', 'slash_count', 'has_ip', 'is_https', 'subdomain_count', 'risky_tld', 'digit_count']]
+X = df[['url_length', 'dot_count', 'suspicious_word', 'dash_count', 'at_count', 'slash_count', 'has_ip', 'is_https', 'subdomain_count', 'risky_tld', 'digit_count']]
 y = df['target']
 
 # dataset Splitter
@@ -98,7 +98,7 @@ scannerAI = RandomForestClassifier(
     )
 scannerAI.fit(X_train, y_train)
 
-# 7.answer X_test question
+# answer X_test question
 y_pred = scannerAI.predict(X_test)
 
 print("Overall Model Accuracy:", accuracy_score(y_test, y_pred))
@@ -118,17 +118,17 @@ print(f"Mistaken: {model_errorCount[0][1]}")
 print(f"Missing Sites ({risk_label}): {missed_count}")
 print(f"Sites Caught: {model_errorCount[1][1]}")
 
-# 8. discover clues AI used to solve the issue
+# AI Clue discover
 print("\n--- AI Clue Rankings ---")
 for feature, score in zip(X.columns, scannerAI.feature_importances_):
     print(f"{feature}: {score:.4f}")
 
-# 9. Live Test 
+# Live Test 
 test_url = input("Enter Suspicious URL:")
 test_data = pd.DataFrame({
-'url_length': [len(test_url)],
+    'url length': [len(test_url)],
     'dot_count': [str(test_url).count('.')],
-    'has_suspicious_words': [check_suspicious(test_url)],  
+    'suspicious_words': [check_suspicious(test_url)],  
     'dash_count' : [str(test_url).count('-')],
     'at_count' : [str(test_url).count('@')],
     'slash_count' : [str(test_url).count('/')],
@@ -143,5 +143,5 @@ prediction = scannerAI.predict(test_data)
 if prediction [0] == 1:
     print(" ALERT >> PHISHING URL! ")
 else:
-    print("SUCCESS: This URL is Safe.")
+    print("SUCCESS: This URL is Safe.") # Replace: while 
     
